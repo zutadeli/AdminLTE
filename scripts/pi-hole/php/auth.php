@@ -19,7 +19,7 @@ function check_cors() {
 
     if(isset($setupVars["IPV4_ADDRESS"])) {
         $ipv4 = explode("/", $setupVars["IPV4_ADDRESS"]);
-        $ipv4 = $ipv4[0]
+        $ipv4 = $ipv4[0];
     }
     else {
         $ipv4 = $_SERVER['SERVER_ADDR'];

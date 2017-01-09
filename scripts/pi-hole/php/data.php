@@ -94,7 +94,7 @@
         // queries at all. Otherwise the output of the API is inconsistent.
         if(count($ads_over_time) == 0)
         {
-            $ads_over_time = [1 => 0];
+            $ads_over_time = array(1 => 0);
         }
 
         return Array(
@@ -121,8 +121,8 @@
         arsort($dns_domains);
 
         // Prepare arrays and counters for Top Items
-        $topDomains = []; $domaincounter = 0;
-        $topAds = []; $adcounter = 0;
+        $topDomains = array(); $domaincounter = 0;
+        $topAds = array(); $adcounter = 0;
 
         // Default number of Top Items to show is 10
         $qty = 10;
@@ -190,7 +190,7 @@
     }
 
     function resolveIPs(&$array) {
-        $hostarray = [];
+        $hostarray = array();
         foreach ($array as $key => $value)
         {
             $hostname = gethostbyaddr($key);
@@ -354,7 +354,7 @@
         if(!$showBlocked && !$showPermitted)
         {
             // Nothing to do for us here
-            return [];
+            return array();
         }
 
         foreach ($dns_queries as $query) {
@@ -426,18 +426,18 @@
         {
             // Seeks on the file pointer where we want to continue reading is known
             fseek($file, $offset);
-            $lines = [];
+            $lines = array();
             while (!feof($file)) {
                 array_push($lines,fgets($file));
             }
-            return ["offset" => ftell($file), "lines" => $lines];
+            return array("offset" => ftell($file), "lines" => $lines);
         }
         else
         {
             // Locate the current position of the file read/write pointer
             fseek($file, -1, SEEK_END);
             // Add one to skip the very last "\n" in the log file
-            return ["offset" => ftell($file)+1];
+            return array("offset" => ftell($file)+1);
         }
         fclose($file);
     }
@@ -452,7 +452,7 @@
 
     function getDnsQueries(\SplFileObject $log) {
         $log->rewind();
-        $lines = [];
+        $lines = array();
         foreach ($log as $line) {
             if(strpos($line, ": query[A") !== false) {
                 $lines[] = $line;
@@ -463,7 +463,7 @@
 
     function getDnsQueryDomains(\SplFileObject $log) {
         $log->rewind();
-        $domains = [];
+        $domains = array();
         foreach ($log as $line) {
             if(strpos($line, ": query[A") !== false) {
                 $exploded = explode(" ", $line);
@@ -486,7 +486,7 @@
 
     function getDnsQueriesAll(\SplFileObject $log) {
         $log->rewind();
-        $lines = [];
+        $lines = array();
         foreach ($log as $line) {
             if(strpos($line, ": query[A") || strpos($line, "gravity.list") || strpos($line, ": forwarded") !== false) {
                 $lines[] = $line;
@@ -518,7 +518,7 @@
 
     function getGravity() {
         global $gravity,$whitelist,$blacklist;
-        $domains = [];
+        $domains = array();
 
         // ADD (true) preEventHorizon domains
         getDomains($gravity, $domains, true);
@@ -534,7 +534,7 @@
 
     function getBlockedQueries(\SplFileObject $log) {
         $log->rewind();
-        $lines = [];
+        $lines = array();
         foreach ($log as $line) {
             $exploded = explode(" ", str_replace("  "," ",$line));
             if(count($exploded) == 8 || count($exploded) == 10) {
@@ -582,7 +582,7 @@
 
     function getForwards(\SplFileObject $log) {
         $log->rewind();
-        $lines = [];
+        $lines = array();
         foreach ($log as $line) {
             if(strpos($line, ": forwarded") !== false) {
                 $lines[] = $line;
@@ -605,8 +605,8 @@
     }
 
     function overTime($entries, $gravity_domains) {
-        $byTimeDomains = [];
-        $byTimeAds = [];
+        $byTimeDomains = array();
+        $byTimeAds = array();
         foreach ($entries as $entry) {
             $time = date_create(substr($entry, 0, 16));
             $hour = $time->format('G');
@@ -631,12 +631,12 @@
                 $byTimeDomains[$time] = 1;
             }
         }
-        return [$byTimeDomains,$byTimeAds];
+        return array($byTimeDomains,$byTimeAds);
     }
 
     function overTime10mins($entries, $gravity_domains=[]) {
-        $byTimeDomains = [];
-        $byTimeAds = [];
+        $byTimeDomains = array();
+        $byTimeAds = array();
         foreach ($entries as $entry) {
             $time = date_create(substr($entry, 0, 16));
             $hour = $time->format('G');
@@ -671,7 +671,7 @@
                 $byTimeDomains[$time] = 1;
             }
         }
-        return [$byTimeDomains,$byTimeAds];
+        return array($byTimeDomains,$byTimeAds);
     }
 
     function alignTimeArrays(&$times1, &$times2) {
