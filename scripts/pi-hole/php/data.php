@@ -66,7 +66,7 @@
         // queries at all. Otherwise the output of the API is inconsistent.
         if(count($ads_over_time) == 0)
         {
-            $ads_over_time = [1 => 0];
+            $ads_over_time = array(1 => 0);
         }
 
         return Array(
