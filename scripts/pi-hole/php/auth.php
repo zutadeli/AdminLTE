@@ -16,7 +16,14 @@ function log_and_die($message) {
 
 function check_cors() {
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
-    $ipv4 = isset($setupVars["IPV4_ADDRESS"]) ? explode("/", $setupVars["IPV4_ADDRESS"])[0] : $_SERVER['SERVER_ADDR'];
+
+    if(isset($setupVars["IPV4_ADDRESS"])) {
+        $ipv4 = explode("/", $setupVars["IPV4_ADDRESS"]);
+        $ipv4 = $ipv4[0]
+    }
+    else {
+        $ipv4 = $_SERVER['SERVER_ADDR'];
+    }
 
     // Check CORS
     $AUTHORIZED_HOSTNAMES = array(
