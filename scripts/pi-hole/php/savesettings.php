@@ -77,7 +77,7 @@ function validDomain($domain_name)
 						}
 						else
 						{
-							$error .= "IP (".$IP.") is invalid!<br>";
+							$error .= "IP (".htmlentities($IP).") is invalid!<br>";
 						}
 					}
 				}
@@ -163,7 +163,7 @@ function validDomain($domain_name)
 				{
 					if(!validDomain($domain))
 					{
-						$error .= "Top Domains/Ads entry ".$domain." is invalid!<br>";
+						$error .= "Top Domains/Ads entry ".htmlentities($domain)." is invalid!<br>";
 					}
 					if(!$first)
 					{
@@ -182,7 +182,7 @@ function validDomain($domain_name)
 				{
 					if(!validIP($client))
 					{
-						$error .= "Top Clients entry ".$client." is invalid (use only IP addresses)!<br>";
+						$error .= "Top Clients entry ".htmlentities($client)." is invalid (use only IP addresses)!<br>";
 					}
 					if(!$first)
 					{
@@ -322,21 +322,21 @@ function validDomain($domain_name)
 					$from = $_POST["from"];
 					if (!validIP($from))
 					{
-						$error .= "From IP (".$from.") is invalid!<br>";
+						$error .= "From IP (".htmlentities($from).") is invalid!<br>";
 					}
 
 					// Validate to IP
 					$to = $_POST["to"];
 					if (!validIP($to))
 					{
-						$error .= "To IP (".$to.") is invalid!<br>";
+						$error .= "To IP (".htmlentities($to).") is invalid!<br>";
 					}
 
 					// Validate router IP
 					$router = $_POST["router"];
 					if (!validIP($router))
 					{
-						$error .= "Router IP (".$router.") is invalid!<br>";
+						$error .= "Router IP (".htmlentities($router).") is invalid!<br>";
 					}
 
 					$domain = $_POST["domain"];
@@ -344,7 +344,7 @@ function validDomain($domain_name)
 					// Validate Domain name
 					if(!validDomain($domain))
 					{
-						$error .= "Domain name ".$domain." is invalid!<br>";
+						$error .= "Domain name ".htmlentities($domain)." is invalid!<br>";
 					}
 
 					$leasetime = $_POST["leasetime"];
@@ -352,7 +352,7 @@ function validDomain($domain_name)
 					// Validate Lease time length
 					if(!is_numeric($leasetime) || intval($leasetime) < 0)
 					{
-						$error .= "Lease time ".$leasetime." is invalid!<br>";
+						$error .= "Lease time ".htmlentities($leasetime)." is invalid!<br>";
 					}
 
 					if(isset($_POST["useIPv6"]))
