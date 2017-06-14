@@ -89,8 +89,6 @@ function updateQueriesOverTime() {
 function updateQueryTypesOverTime() {
     $.getJSON("http://pi.hole:4747/stats/overTime/query_types", function(data) {
 
-        console.log(data);
-
         // convert received objects to arrays
         data.query_types = objectToArray(data.query_types);
         var timestamps = data.query_types[0];
@@ -244,25 +242,20 @@ function escapeHtml(text) {
 }
 
 function updateTopClientsChart() {
-    $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
-
-        if("FTLnotrunning" in data)
-        {
-            return;
-        }
+    $.getJSON("http://pi.hole:4747/stats/top_clients", function(data) {
 
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
         var clienttable =  $("#client-frequency").find("tbody:last");
         var client, percentage, clientname, clientip;
-        for (client in data.top_sources) {
+        for (client in data.top_clients) {
 
-            if ({}.hasOwnProperty.call(data.top_sources, client)){
+            if ({}.hasOwnProperty.call(data.top_clients, client)){
                 // Sanitize client
                 if(escapeHtml(client) !== client)
                 {
                     // Make a copy with the escaped index if necessary
-                    data.top_sources[escapeHtml(client)] = data.top_sources[client];
+                    data.top_clients[escapeHtml(client)] = data.top_clients[client];
                 }
                 client = escapeHtml(client);
                 if(client.indexOf("|") > -1)
@@ -278,9 +271,9 @@ function updateTopClientsChart() {
                 }
 
                 var url = "<a href=\"queries.php?client="+clientip+"\" title=\""+clientip+"\">"+clientname+"</a>";
-                percentage = data.top_sources[client] / data.dns_queries_today * 100;
+                percentage = data.top_clients[client] / data.dns_queries_today * 100;
                 clienttable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_sources[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
+                    "</td> <td>" + data.top_clients[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
 
@@ -293,42 +286,43 @@ function updateTopClientsChart() {
 }
 
 function updateTopLists() {
-    $.getJSON("api.php?summaryRaw&topItems", function(data) {
-
-        if("FTLnotrunning" in data)
-        {
-            return;
-        }
+    $.getJSON("http://pi.hole:4747/stats/top_domains", function(data) {
 
         // Clear tables before filling them with data
         $("#domain-frequency td").parent().remove();
-        $("#ad-frequency td").parent().remove();
         var domaintable = $("#domain-frequency").find("tbody:last");
-        var adtable = $("#ad-frequency").find("tbody:last");
         var url, domain, percentage;
-        for (domain in data.top_queries) {
-            if ({}.hasOwnProperty.call(data.top_queries,domain)){
+        for (domain in data.top_domains) {
+            if ({}.hasOwnProperty.call(data.top_domains,domain)){
                 // Sanitize domain
                 if(escapeHtml(domain) !== domain)
                 {
                     // Make a copy with the escaped index if necessary
-                    data.top_queries[escapeHtml(domain)] = data.top_queries[domain];
+                    data.top_domains[escapeHtml(domain)] = data.top_domains[domain];
                 }
                 domain = escapeHtml(domain);
                 url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
-                percentage = data.top_queries[domain] / data.dns_queries_today * 100;
+                percentage = data.top_domains[domain] / (data.dns_queries_today - data.ads_blocked_today) * 100;
                 domaintable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
+                    "</td> <td>" + data.top_domains[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + (data.dns_queries_today - data.ads_blocked_today) + "\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
         }
 
         // Remove table if there are no results (e.g. privacy mode enabled)
-        if(jQuery.isEmptyObject(data.top_queries))
+        if(jQuery.isEmptyObject(data.top_domains))
         {
             $("#domain-frequency").parent().remove();
         }
+        $("#domain-frequency .overlay").hide();
+    });
 
+    $.getJSON("http://pi.hole:4747/stats/top_ads", function(data) {
+
+        // Clear tables before filling them with data
+        $("#ad-frequency td").parent().remove();
+        var adtable = $("#ad-frequency").find("tbody:last");
+        var url, domain, percentage;
         for (domain in data.top_ads) {
             if ({}.hasOwnProperty.call(data.top_ads,domain)){
                 // Sanitize domain
@@ -352,7 +346,6 @@ function updateTopLists() {
             $("#ad-frequency").parent().remove();
         }
 
-        $("#domain-frequency .overlay").hide();
         $("#ad-frequency .overlay").hide();
         // Update top lists data every 10 seconds
         setTimeout(updateTopLists, 10000);
