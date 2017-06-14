@@ -31,7 +31,7 @@ function objectToArray(p){
 
 var failures = 0;
 function updateQueriesOverTime() {
-    $.getJSON("http://pi.hole:4747/overTime/graphs", function(data) {
+    $.getJSON("http://pi.hole:4747/stats/overTime/graphs", function(data) {
 
         if("FTLnotrunning" in data)
         {
@@ -87,7 +87,7 @@ function updateQueriesOverTime() {
 }
 
 function updateQueryTypesOverTime() {
-    $.getJSON("http://pi.hole:4747/overTime/query_types", function(data) {
+    $.getJSON("http://pi.hole:4747/stats/overTime/query_types", function(data) {
 
         console.log(data);
 
@@ -144,7 +144,7 @@ function updateQueryTypesOverTime() {
 }
 
 function updateForwardedOverTime() {
-    $.getJSON("http://pi.hole:4747/overTime/forward_dest", function(data) {
+    $.getJSON("http://pi.hole:4747/stats/overTime/forward_dest", function(data) {
 
         if("FTLnotrunning" in data)
         {
