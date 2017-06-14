@@ -103,25 +103,25 @@ $(document).ready(function() {
     var GETDict = {};
     location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
 
-    var APIstring = "http://" + window.location.hostname + ":4747/history?_";
+    var APIstring = "http://" + window.location.hostname + ":4747/history";
 
     if("from" in GETDict && "until" in GETDict)
     {
-        APIstring += "&from="+GETDict["from"];
+        APIstring += "?from="+GETDict["from"];
         APIstring += "&until="+GETDict["until"];
     }
     else if("client" in GETDict)
     {
-        APIstring += "&client="+GETDict["client"];
+        APIstring += "?client="+GETDict["client"];
     }
     else if("domain" in GETDict)
     {
-        APIstring += "&domain="+GETDict["domain"];
+        APIstring += "?domain="+GETDict["domain"];
     }
     else if(!("all" in GETDict))
     {
         var timestamp = Math.floor(Date.now() / 1000);
-        APIstring += "&from="+(timestamp - 600);
+        APIstring += "?from="+(timestamp - 600);
         APIstring += "&until="+(timestamp + 100);
     }
 
