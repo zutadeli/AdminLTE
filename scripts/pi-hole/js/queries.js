@@ -16,7 +16,7 @@ function escapeRegex(text) {
 }
 
 function refreshData() {
-    tableApi.ajax.url("api.php?getAllQueries").load();
+    tableApi.ajax.url("http://pi.hole:4747/history").load();
 //    updateSessionTimer();
 }
 
@@ -103,7 +103,7 @@ $(document).ready(function() {
     var GETDict = {};
     location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
 
-    var APIstring = "api.php?getAllQueries";
+    var APIstring = "http://pi.hole:4747/history?_";
 
     if("from" in GETDict && "until" in GETDict)
     {
@@ -162,7 +162,7 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": {"url": APIstring, "error": handleAjaxError },
+        "ajax": {"url": APIstring, "error": handleAjaxError, "dataSrc": "history" },
         "autoWidth" : false,
         "processing": true,
         "order" : [[0, "desc"]],

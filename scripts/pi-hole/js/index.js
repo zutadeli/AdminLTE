@@ -31,7 +31,7 @@ function objectToArray(p){
 
 var failures = 0;
 function updateQueriesOverTime() {
-    $.getJSON("api.php?overTimeData10mins", function(data) {
+    $.getJSON("http://pi.hole:4747/stats/overTime", function(data) {
 
         if("FTLnotrunning" in data)
         {
@@ -369,7 +369,7 @@ function updateSummaryData(runOnce) {
             setTimeout(updateSummaryData, timeInSeconds * 1000);
         }
     };
-    $.getJSON("api.php?summary", function LoadSummaryData(data) {
+    $.getJSON("http://pi.hole:4747/stats/summary", function LoadSummaryData(data) {
 
         updateSessionTimer();
 
