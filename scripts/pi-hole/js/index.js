@@ -87,17 +87,14 @@ function updateQueriesOverTime() {
 }
 
 function updateQueryTypesOverTime() {
-    $.getJSON("api.php?overTimeDataQueryTypes", function(data) {
+    $.getJSON("http://pi.hole:4747/overTime/query_types", function(data) {
 
-        if("FTLnotrunning" in data)
-        {
-            return;
-        }
+        console.log(data);
 
         // convert received objects to arrays
-        data.over_time = objectToArray(data.over_time);
-        var timestamps = data.over_time[0];
-        var plotdata  = data.over_time[1];
+        data.query_types = objectToArray(data.query_types);
+        var timestamps = data.query_types[0];
+        var plotdata  = data.query_types[1];
         // Remove possibly already existing data
         queryTypeChart.data.labels = [];
         queryTypeChart.data.datasets[0].data = [];
