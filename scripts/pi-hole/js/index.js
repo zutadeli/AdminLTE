@@ -31,7 +31,7 @@ function objectToArray(p){
 
 var failures = 0;
 function updateQueriesOverTime() {
-    $.getJSON("http://pi.hole:4747/stats/overTime/graphs", function(data) {
+    $.getJSON("http://" + window.location.hostname + ":4747/stats/overTime/graphs", function(data) {
 
         if("FTLnotrunning" in data)
         {
@@ -87,7 +87,7 @@ function updateQueriesOverTime() {
 }
 
 function updateQueryTypesOverTime() {
-    $.getJSON("http://pi.hole:4747/stats/overTime/query_types", function(data) {
+    $.getJSON("http://" + window.location.hostname + ":4747/stats/overTime/query_types", function(data) {
 
         // convert received objects to arrays
         data.query_types = objectToArray(data.query_types);
@@ -142,7 +142,7 @@ function updateQueryTypesOverTime() {
 }
 
 function updateForwardedOverTime() {
-    $.getJSON("http://pi.hole:4747/stats/overTime/forward_dest", function(data) {
+    $.getJSON("http://" + window.location.hostname + ":4747/stats/overTime/forward_dest", function(data) {
 
         if("FTLnotrunning" in data)
         {
@@ -242,7 +242,7 @@ function escapeHtml(text) {
 }
 
 function updateTopClientsChart() {
-    $.getJSON("http://pi.hole:4747/stats/top_clients", function(data) {
+    $.getJSON("http://" + window.location.hostname + ":4747/stats/top_clients", function(data) {
 
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
@@ -286,7 +286,7 @@ function updateTopClientsChart() {
 }
 
 function updateTopLists() {
-    $.getJSON("http://pi.hole:4747/stats/top_domains", function(data) {
+    $.getJSON("http://" + window.location.hostname + ":4747/stats/top_domains", function(data) {
 
         // Clear tables before filling them with data
         $("#domain-frequency td").parent().remove();
@@ -317,7 +317,7 @@ function updateTopLists() {
         $("#domain-frequency .overlay").hide();
     });
 
-    $.getJSON("http://pi.hole:4747/stats/top_ads", function(data) {
+    $.getJSON("http://" + window.location.hostname + ":4747/stats/top_ads", function(data) {
 
         // Clear tables before filling them with data
         $("#ad-frequency td").parent().remove();
@@ -359,7 +359,7 @@ function updateSummaryData(runOnce) {
             setTimeout(updateSummaryData, timeInSeconds * 1000);
         }
     };
-    $.getJSON("http://pi.hole:4747/stats/summary", function LoadSummaryData(data) {
+    $.getJSON("http://" + window.location.hostname + ":4747/stats/summary", function LoadSummaryData(data) {
 
         updateSessionTimer();
 
