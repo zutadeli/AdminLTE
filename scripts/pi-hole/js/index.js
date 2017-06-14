@@ -31,7 +31,7 @@ function objectToArray(p){
 
 var failures = 0;
 function updateQueriesOverTime() {
-    $.getJSON("http://pi.hole:4747/stats/overTime", function(data) {
+    $.getJSON("http://pi.hole:4747/overTime/graphs", function(data) {
 
         if("FTLnotrunning" in data)
         {
@@ -147,7 +147,7 @@ function updateQueryTypesOverTime() {
 }
 
 function updateForwardedOverTime() {
-    $.getJSON("api.php?overTimeDataForwards&getForwardDestinationNames", function(data) {
+    $.getJSON("http://pi.hole:4747/overTime/forward_dest", function(data) {
 
         if("FTLnotrunning" in data)
         {
@@ -155,9 +155,9 @@ function updateForwardedOverTime() {
         }
 
         // convert received objects to arrays
-        data.over_time = objectToArray(data.over_time);
-        var timestamps = data.over_time[0];
-        var plotdata  = data.over_time[1];
+        data.forward_dest = objectToArray(data.forward_dest);
+        var timestamps = data.forward_dest[0];
+        var plotdata  = data.forward_dest[1];
         var labels = [];
         var key, i, j;
         for (key in data.forward_destinations)
