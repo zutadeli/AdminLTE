@@ -21,6 +21,25 @@ function log_and_die($message) {
     die($message);
 }
 
+function getServerHost() {
+    $server_host = $_SERVER['HTTP_HOST'];
+
+    // Use parse_url if HTTP_HOST contains a colon (:) to get the host name
+    // e.g.
+    // https://pi.hole
+    // pi.hole:8080
+    // However, we don't use parse_url(...) if there is no colon, since it will fail for e.g. "pi.hole"
+
+    // Don't use parse_url for IPv6 addresses, since it does not support them
+    // see PHP bug report: https://bugs.php.net/bug.php?id=72811
+    if(strpos($server_host, ":") && !strpos($server_host, "[") && !strpos($server_host, "]"))
+    {
+        $server_host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
+    }
+    // Remove "[" ... "]"
+    return str_replace(array("[","]"), array("",""), $server_host);
+}
+
 function check_cors() {
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
     $ipv4 = isset($setupVars["IPV4_ADDRESS"]) ? explode("/", $setupVars["IPV4_ADDRESS"])[0] : $_SERVER['SERVER_ADDR'];
@@ -42,22 +61,7 @@ function check_cors() {
 
     // Since the Host header is easily manipulated, we can only check if it's wrong and can't use it
     // to validate that the client is authorized, only unauthorized.
-    $server_host = $_SERVER['HTTP_HOST'];
-
-    // Use parse_url if HTTP_HOST contains a colon (:) to get the host name
-    // e.g.
-    // https://pi.hole
-    // pi.hole:8080
-    // However, we don't use parse_url(...) if there is no colon, since it will fail for e.g. "pi.hole"
-
-    // Don't use parse_url for IPv6 addresses, since it does not support them
-    // see PHP bug report: https://bugs.php.net/bug.php?id=72811
-    if(strpos($server_host, ":") && !strpos($server_host, "[") && !strpos($server_host, "]"))
-    {
-        $server_host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
-    }
-    // Remove "[" ... "]"
-    $server_host = str_replace(array("[","]"), array("",""), $server_host);
+    $server_host = getServerHost();
 
     if(isset($_SERVER['HTTP_HOST']) && !in_array($server_host, $AUTHORIZED_HOSTNAMES)) {
         log_and_die("Failed Host Check: " . $server_host .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
