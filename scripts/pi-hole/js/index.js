@@ -405,7 +405,7 @@ function updateSummaryData(runOnce) {
 
         window.setTimeout(function() {
             ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today"].forEach(function(header, idx) {
-                var textData = (idx === 3 && data[header] !== "to") ? data[header] + "%" : data[header];
+                var textData = (idx === 3 && data[header] !== "to") ? data[header].toLocaleString() + "%" : data[header].toLocaleString();
                 $("h3#" + header).text(textData);
             });
             $("h3.statistic.glow").removeClass("glow");
