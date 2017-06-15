@@ -162,7 +162,7 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": {"url": APIstring, "error": handleAjaxError, "dataSrc": "history" },
+        "ajax": {"url": APIstring, "error": handleAjaxError, "dataSrc": "history", "cache": true},
         "autoWidth" : false,
         "processing": true,
         "order" : [[0, "desc"]],
